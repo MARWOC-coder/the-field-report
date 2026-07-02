@@ -6,7 +6,6 @@ fire-team leaderboards create accountability and competition, and HQ (admins) ve
 the big claims.
 
 **Live app:** https://marwoc-coder.github.io/the-field-report/
-*(First deploy: run `scripts/deploy.ps1` once — see Deploying below.)*
 
 > We serve together. We earn together. Make one less.
 
