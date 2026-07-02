@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
 import { weekBounds } from '../lib/dates';
 import { rankForPoints, fmtPoints } from '../lib/ranks';
-import Chevron from '../components/Chevron';
+import Avatar from '../components/Avatar';
 
 export default function TeamPage() {
   const { session, profile } = useAuth();
@@ -28,18 +28,27 @@ export default function TeamPage() {
     },
   });
 
-  if (!profile || !board) return <div className="loading-page"><span className="spin" /></div>;
+  if (!profile || !board) {
+    return (
+      <div>
+        <div className="skeleton" style={{ height: 120, marginBottom: 14 }} />
+        <div className="skeleton" style={{ height: 260 }} />
+      </div>
+    );
+  }
 
   if (!profile.fire_team_id) {
     return (
       <div>
         <header className="page-head">
-          <div className="kicker">FIRE TEAM</div>
-          <h1>UN<span className="accent">ASSIGNED</span></h1>
+          <div className="kicker">Fire Team</div>
+          <h1>Un<span className="accent">assigned</span></h1>
         </header>
-        <div className="empty-note">
-          You haven't been assigned to a fire team yet.
-          <br />HQ assigns teams from the admin panel — ping leadership.
+        <div className="panel">
+          <div className="empty-note">
+            You haven't been assigned to a fire team yet.
+            <br />HQ assigns teams from the admin panel — ping leadership.
+          </div>
         </div>
       </div>
     );
@@ -50,32 +59,40 @@ export default function TeamPage() {
     .filter((r) => r.fire_team_id === profile.fire_team_id)
     .sort((a, b) => Number(b.points) - Number(a.points));
   const standing = (teams ?? []).findIndex((t) => t.team_id === profile.fire_team_id);
+  const maxPts = Math.max(...roster.map((r) => Number(r.points)), 1);
 
   return (
     <div>
       <header className="page-head">
-        <div className="kicker">FIRE TEAM · THIS WEEK</div>
-        <h1>{(myTeam?.team_name ?? 'FIRE TEAM').toUpperCase()}</h1>
-        {myTeam?.motto && <div className="mono small muted">“{myTeam.motto}”</div>}
+        <div className="kicker">Fire Team · This Week</div>
+        <h1>{myTeam?.team_name ?? 'Fire Team'}</h1>
+        {myTeam?.motto && <div className="headsub">“{myTeam.motto}”</div>}
       </header>
 
-      <div className="day-strip">
-        <div className="day-cell">
-          <div className="num">{standing >= 0 ? `#${standing + 1}` : '—'}</div>
-          <div className="lbl">Standing</div>
+      <div className="stat-grid cols-3">
+        <div className="stat-tile">
+          <div>
+            <div className="v">{standing >= 0 ? `#${standing + 1}` : '—'}</div>
+            <div className="l">Standing</div>
+          </div>
         </div>
-        <div className="day-cell">
-          <div className={`num ${myTeam?.all_hands ? 'ok' : ''}`}>{myTeam ? fmtPoints(myTeam.score) : '0'}</div>
-          <div className="lbl">Team score</div>
+        <div className="stat-tile">
+          <div>
+            <div className="v" style={myTeam?.all_hands ? { color: 'var(--ok)' } : undefined}>
+              {myTeam ? fmtPoints(myTeam.score) : '0'}
+            </div>
+            <div className="l">Team Score</div>
+          </div>
         </div>
-        <div className="day-cell">
-          <div className="num">{myTeam?.all_hands ? 'YES' : 'NO'}</div>
-          <div className="lbl">All hands</div>
+        <div className="stat-tile">
+          <div>
+            <div className="v" style={{ color: myTeam?.all_hands ? 'var(--ok)' : 'var(--muted)' }}>
+              {myTeam?.all_hands ? 'YES' : 'NO'}
+            </div>
+            <div className="l">All Hands</div>
+          </div>
         </div>
       </div>
-      <p className="mono small muted" style={{ margin: '0 2px 14px' }}>
-        Team score = average pts per Marine. All Hands (+15%) needs every Marine at 3+ mission days this week.
-      </p>
 
       <section className="panel">
         <div className="panel-title">Roster · This Week</div>
@@ -83,17 +100,28 @@ export default function TeamPage() {
           const rank = rankForPoints(Number(r.career_points));
           const me = r.user_id === session.user.id;
           return (
-            <div key={r.user_id} className={`board-row ${me ? 'me' : ''}`} style={{ border: 'none', clipPath: 'none', marginBottom: 0, paddingLeft: 2, paddingRight: 2, background: 'transparent', borderBottom: '1px dashed var(--line)' }}>
-              <Chevron rank={rank} size={22} />
+            <div key={r.user_id} className="roster-row">
+              <Avatar name={r.callsign} size={38} />
               <div className="who">
-                <div className="callsign">{r.callsign}{me ? ' (you)' : ''}</div>
-                <div className="sub">{rank.abbr} · {r.mission_days}d on mission</div>
+                <div className="callsign">
+                  {r.callsign}{me && <span className="you" style={{ color: 'var(--gold)' }}> · you</span>}
+                </div>
+                <div className="sub mono" style={{ fontSize: 10, color: 'var(--muted)' }}>
+                  {rank.abbr.toUpperCase()} · {r.mission_days}D ON MISSION
+                </div>
+                <div className="roster-bar"><div style={{ width: `${(Number(r.points) / maxPts) * 100}%` }} /></div>
               </div>
-              <div className="pts">{fmtPoints(r.points)}<span className="unit">PTS</span></div>
+              <div className="pts" style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: 20 }}>
+                {fmtPoints(r.points)}
+              </div>
             </div>
           );
         })}
       </section>
+
+      <p className="mono small muted" style={{ margin: '0 4px', lineHeight: 1.7 }}>
+        TEAM SCORE = AVG PTS PER MARINE. ALL HANDS (+15%) NEEDS EVERY MARINE AT 3+ MISSION DAYS THIS WEEK.
+      </p>
     </div>
   );
 }

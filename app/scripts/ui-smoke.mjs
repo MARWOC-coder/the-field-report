@@ -43,8 +43,13 @@ console.log('BOARD ROWS:', JSON.stringify(rows));
 // me page
 await page.click('a[href="#/me"]');
 await page.waitForSelector('.rank-hero', { timeout: 15000 });
-await page.waitForTimeout(400);
-await page.screenshot({ path: `${shotDir}/shot-4-me.png` });
+await page.waitForTimeout(600);
+await page.screenshot({ path: `${shotDir}/shot-4-me.png`, fullPage: true });
+
+// team page
+await page.click('a[href="#/team"]');
+await page.waitForTimeout(1200);
+await page.screenshot({ path: `${shotDir}/shot-6-team.png` });
 
 await browser.close();
 console.log('UI SMOKE PASSED');

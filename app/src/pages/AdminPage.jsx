@@ -3,13 +3,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { fmtDate } from '../lib/dates';
 import { fmtPoints } from '../lib/ranks';
+import Seg from '../components/Seg';
 
 const TABS = [
-  ['approvals', 'Approvals'],
+  ['approvals', 'Queue'],
   ['kpis', 'KPIs'],
   ['teams', 'Teams'],
-  ['members', 'Members'],
-  ['settings', 'Settings'],
+  ['members', 'Roster'],
+  ['settings', 'Config'],
 ];
 
 function useAdminData() {
@@ -426,14 +427,10 @@ export default function AdminPage() {
   return (
     <div>
       <header className="page-head">
-        <div className="kicker">COMMAND POST</div>
-        <h1>HQ <span className="accent">ADMIN</span></h1>
+        <div className="kicker">Command Post</div>
+        <h1>HQ <span className="accent">Admin</span></h1>
       </header>
-      <div className="seg">
-        {TABS.map(([key, label]) => (
-          <button key={key} className={tab === key ? 'on' : ''} onClick={() => setTab(key)}>{label}</button>
-        ))}
-      </div>
+      <Seg options={TABS} value={tab} onChange={setTab} small />
       {tab === 'approvals' && <Approvals />}
       {tab === 'kpis' && <Kpis />}
       {tab === 'teams' && <Teams />}

@@ -1,5 +1,11 @@
 import { useState } from 'react';
 import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from '../lib/supabase';
+import Seg from '../components/Seg';
+
+const MODES = [
+  ['signin', 'Sign In'],
+  ['signup', 'Request Access'],
+];
 
 export default function Login() {
   const [mode, setMode] = useState('signin');
@@ -48,18 +54,11 @@ export default function Login() {
     <div className="login-wrap">
       <div className="login-card">
         <img className="login-logo" src="./assets/marwoc-logo.webp" alt="MARWOC" />
-        <h1>THE FIELD <span>REPORT</span></h1>
-        <div className="login-class">MARWOC · DAILY KPI COMMAND</div>
-        <p className="login-motto">WE SERVE TOGETHER. WE EARN TOGETHER.</p>
+        <h1>The Field <span>Report</span></h1>
+        <div className="login-class">MARWOC · Daily KPI Command</div>
+        <p className="login-motto">We serve together. We earn together.</p>
 
-        <div className="login-toggle">
-          <button type="button" className={mode === 'signin' ? 'on' : ''} onClick={() => { setMode('signin'); setError(''); }}>
-            Sign In
-          </button>
-          <button type="button" className={mode === 'signup' ? 'on' : ''} onClick={() => { setMode('signup'); setError(''); }}>
-            Request Access
-          </button>
-        </div>
+        <Seg options={MODES} value={mode} onChange={(m) => { setMode(m); setError(''); }} />
 
         {error && <div className="form-error">{error}</div>}
         {ok && <div className="form-ok">{ok}</div>}
@@ -97,7 +96,7 @@ export default function Login() {
         </form>
 
         {mode === 'signup' && (
-          <p className="mono small muted mt12" style={{ textAlign: 'center' }}>
+          <p className="login-foot muted mt12" style={{ textAlign: 'center' }}>
             By requesting access you pledge to log honest numbers.
             <br />Honor. Courage. Commitment.
           </p>
@@ -112,9 +111,9 @@ export function Standby({ onSignOut }) {
     <div className="login-wrap">
       <div className="login-card" style={{ textAlign: 'center' }}>
         <img className="login-logo" src="./assets/marwoc-logo.webp" alt="MARWOC" />
-        <h1>STAND <span>BY</span></h1>
-        <div className="login-class">ACCESS REQUEST RECEIVED</div>
-        <p className="mono small muted" style={{ margin: '16px 0 20px', lineHeight: 1.7 }}>
+        <h1>Stand <span>By</span></h1>
+        <div className="login-class">Access Request Received</div>
+        <p className="login-foot muted" style={{ margin: '18px 0 22px' }}>
           Your request is with MARWOC command for approval.
           <br />You'll get access as soon as an admin verifies you.
           <br />Ping leadership in the community if it's urgent.
