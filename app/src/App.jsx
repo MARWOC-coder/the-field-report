@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './lib/auth';
 import NavBar from './components/NavBar';
+import Sidebar from './components/Sidebar';
 import Login, { Standby } from './pages/Login';
 import LogPage from './pages/LogPage';
 import BoardPage from './pages/BoardPage';
@@ -24,7 +25,8 @@ function Gate() {
 
   const isAdmin = profile.role === 'admin';
   return (
-    <>
+    <div className="app-layout">
+      <Sidebar />
       <main className="shell">
         <Routes>
           <Route path="/" element={<LogPage />} />
@@ -36,7 +38,7 @@ function Gate() {
         </Routes>
       </main>
       <NavBar />
-    </>
+    </div>
   );
 }
 

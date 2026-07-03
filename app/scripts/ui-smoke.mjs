@@ -33,7 +33,7 @@ await plus.click();
 await page.waitForTimeout(1500); // debounce + save
 
 // leaderboard
-await page.click('a[href="#/board"]');
+await page.click('.navbar a[href="#/board"]');
 await page.waitForSelector('.board-row', { timeout: 15000 });
 await page.waitForTimeout(600);
 await page.screenshot({ path: `${shotDir}/shot-3-board.png` });
@@ -41,13 +41,13 @@ const rows = await page.locator('.board-row .callsign').allTextContents();
 console.log('BOARD ROWS:', JSON.stringify(rows));
 
 // me page
-await page.click('a[href="#/me"]');
+await page.click('.navbar a[href="#/me"]');
 await page.waitForSelector('.rank-hero', { timeout: 15000 });
 await page.waitForTimeout(600);
 await page.screenshot({ path: `${shotDir}/shot-4-me.png`, fullPage: true });
 
 // team page
-await page.click('a[href="#/team"]');
+await page.click('.navbar a[href="#/team"]');
 await page.waitForTimeout(1200);
 await page.screenshot({ path: `${shotDir}/shot-6-team.png` });
 

@@ -10,7 +10,7 @@ await page.fill('input[type=email]', email);
 await page.fill('input[type=password]', password);
 await page.click('button:has-text("Report In")');
 await page.waitForSelector('text=Daily Activity', { timeout: 20000 });
-await page.click('a[href="#/admin"]');
+await page.click('.navbar a[href="#/admin"]');
 await page.waitForSelector('text=COMMAND POST', { timeout: 15000 });
 await page.waitForTimeout(900);
 await page.screenshot({ path: `${shotDir}/shot-5-admin.png` });

@@ -6,6 +6,7 @@ import { localToday, fmtDate } from '../lib/dates';
 import { fmtPoints } from '../lib/ranks';
 import MissionRing from '../components/MissionRing';
 import KpiIcon from '../components/KpiIcon';
+import { MiniBoard, UnitPulse, WinsFeed } from '../components/widgets';
 
 const MISSION_THRESHOLD = 25;
 
@@ -259,51 +260,61 @@ export default function LogPage() {
         <h1>The Field <span className="accent">Report</span></h1>
       </header>
 
-      <section className="panel log-hero">
-        <MissionRing points={todayPoints} goal={MISSION_THRESHOLD} />
-        <div className="hero-side">
-          <div className="hero-stat">
-            <span className="ic">{FlameIcon}</span>
-            <div>
-              <div className="v">{stats?.current_streak ?? '—'}</div>
-              <div className="l">Day Streak</div>
+      <div className="page-grid">
+        <div className="page-main">
+          <section className="panel log-hero">
+            <MissionRing points={todayPoints} goal={MISSION_THRESHOLD} />
+            <div className="hero-side">
+              <div className="hero-stat">
+                <span className="ic">{FlameIcon}</span>
+                <div>
+                  <div className="v">{stats?.current_streak ?? '—'}</div>
+                  <div className="l">Day Streak</div>
+                </div>
+              </div>
+              <div className="hero-stat">
+                <span className="ic">{StarIcon}</span>
+                <div>
+                  <div className="v">{stats ? fmtPoints(stats.career_points) : '—'}</div>
+                  <div className="l">Career Points</div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="hero-stat">
-            <span className="ic">{StarIcon}</span>
-            <div>
-              <div className="v">{stats ? fmtPoints(stats.career_points) : '—'}</div>
-              <div className="l">Career Points</div>
-            </div>
-          </div>
+          </section>
+
+          <section className="panel">
+            <div className="panel-title">Daily Activity <span className="tag">Auto-Confirmed</span></div>
+            {activityDefs.map((d) => (
+              <TallyRow
+                key={d.id}
+                def={d}
+                value={local[d.id] ?? 0}
+                onDelta={(delta) => tap(d, delta)}
+                onSet={(v) => setDirect(d, v)}
+              />
+            ))}
+            <p className="tally-hint">TAP A NUMBER TO TYPE IT · SAVES AUTOMATICALLY</p>
+          </section>
+
+          <section className="panel">
+            <div className="panel-title">Ring the Bell <span className="tag">HQ Approval</span></div>
+            {outcomeDefs.map((d) => (
+              <WinRow
+                key={d.id}
+                def={d}
+                entry={entryByKpi[d.id]}
+                onSave={(def, qty, note) => upsert(def, qty, note)}
+              />
+            ))}
+          </section>
         </div>
-      </section>
 
-      <section className="panel">
-        <div className="panel-title">Daily Activity <span className="tag">Auto-Confirmed</span></div>
-        {activityDefs.map((d) => (
-          <TallyRow
-            key={d.id}
-            def={d}
-            value={local[d.id] ?? 0}
-            onDelta={(delta) => tap(d, delta)}
-            onSet={(v) => setDirect(d, v)}
-          />
-        ))}
-        <p className="tally-hint">TAP A NUMBER TO TYPE IT · SAVES AUTOMATICALLY</p>
-      </section>
-
-      <section className="panel">
-        <div className="panel-title">Ring the Bell <span className="tag">HQ Approval</span></div>
-        {outcomeDefs.map((d) => (
-          <WinRow
-            key={d.id}
-            def={d}
-            entry={entryByKpi[d.id]}
-            onSave={(def, qty, note) => upsert(def, qty, note)}
-          />
-        ))}
-      </section>
+        <aside className="page-rail">
+          <MiniBoard />
+          <UnitPulse />
+          <WinsFeed limit={8} />
+        </aside>
+      </div>
     </div>
   );
 }

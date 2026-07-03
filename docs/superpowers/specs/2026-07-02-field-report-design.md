@@ -25,8 +25,10 @@ new members, and manage fire teams.
 
 **Chosen approach: Pure SPA + Supabase + GitHub Pages.**
 
-- **Frontend:** React 18 + Vite SPA. Mobile-first (members log from phones). Marine field-report
-  aesthetic (olive/khaki/stencil), no generic dashboard look.
+- **Frontend:** React 18 + Vite SPA. Mobile-first (members log from phones) with a full
+  desktop hub at ≥1024px: sidebar navigation, two-column page grids, and info rails
+  (top-5 mini leaderboard, unit pulse totals, wins feed) so the desktop view works as the
+  daily check-in dashboard. "Night Ops" design system (brass/scarlet dark, Rajdhani/Barlow).
 - **Backend:** Supabase (new dedicated project on the existing MARWOC org, $0/mo free tier):
   - **Auth:** email/password via Supabase Auth. New users start `pending`.
   - **Postgres + RLS:** all authorization enforced at the database. Members read approved data,
@@ -92,6 +94,9 @@ raw points, carries the celebration of a close.
 | offers       | Offers Made            | 50       | activity | no       | 10        |
 | contracts    | Contracts Signed       | 250      | outcome  | **yes**  | 5         |
 | deals        | Deals Closed           | 500      | outcome  | **yes**  | 5         |
+
+*2026-07-02 update:* `doors`, `d4d`, and `mail` deactivated — the community is
+virtual-first (re-enable anytime from HQ → KPIs).
 
 Outcome entries require a note (address/short details) — friction is the verification.
 Daily caps are enforced server-side (trigger) — the standard defense against inflated

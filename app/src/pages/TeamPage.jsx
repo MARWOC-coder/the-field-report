@@ -4,6 +4,7 @@ import { useAuth } from '../lib/auth';
 import { weekBounds } from '../lib/dates';
 import { rankForPoints, fmtPoints } from '../lib/ranks';
 import Avatar from '../components/Avatar';
+import { MostImproved, WinsFeed } from '../components/widgets';
 
 export default function TeamPage() {
   const { session, profile } = useAuth();
@@ -69,6 +70,8 @@ export default function TeamPage() {
         {myTeam?.motto && <div className="headsub">“{myTeam.motto}”</div>}
       </header>
 
+      <div className="page-grid">
+      <div className="page-main">
       <div className="stat-grid cols-3">
         <div className="stat-tile">
           <div>
@@ -122,6 +125,13 @@ export default function TeamPage() {
       <p className="mono small muted" style={{ margin: '0 4px', lineHeight: 1.7 }}>
         TEAM SCORE = AVG PTS PER MARINE. ALL HANDS (+15%) NEEDS EVERY MARINE AT 3+ MISSION DAYS THIS WEEK.
       </p>
+      </div>
+
+      <aside className="page-rail">
+        <MostImproved />
+        <WinsFeed limit={8} />
+      </aside>
+      </div>
     </div>
   );
 }

@@ -82,64 +82,70 @@ export default function MePage() {
         <h1>{profile.callsign}</h1>
       </header>
 
-      <section className="panel rank-hero">
-        <Chevron rank={rank} size={60} />
-        <div className="rk-grade">{rank.grade}</div>
-        <div className="rk-title">{rank.title}</div>
-        <div className="progress"><div style={{ width: `${pct}%` }} /></div>
-        <div className="progress-lbl">
-          <span>{fmtPoints(career)} CAREER PTS</span>
-          <span>{next ? `${fmtPoints(next.points - career)} TO ${next.abbr.toUpperCase()}` : 'MAX RANK — OOH-RAH'}</span>
-        </div>
-      </section>
+      <div className="page-grid-2">
+        <div>
+          <section className="panel rank-hero">
+            <Chevron rank={rank} size={60} />
+            <div className="rk-grade">{rank.grade}</div>
+            <div className="rk-title">{rank.title}</div>
+            <div className="progress"><div style={{ width: `${pct}%` }} /></div>
+            <div className="progress-lbl">
+              <span>{fmtPoints(career)} CAREER PTS</span>
+              <span>{next ? `${fmtPoints(next.points - career)} TO ${next.abbr.toUpperCase()}` : 'MAX RANK — OOH-RAH'}</span>
+            </div>
+          </section>
 
-      <div className="stat-grid">
-        <div className="stat-tile">
-          <span className="ic">{FlameIcon}</span>
-          <div>
-            <div className="v">{stats.current_streak}</div>
-            <div className="l">Current Streak</div>
+          <div className="stat-grid">
+            <div className="stat-tile">
+              <span className="ic">{FlameIcon}</span>
+              <div>
+                <div className="v">{stats.current_streak}</div>
+                <div className="l">Current Streak</div>
+              </div>
+            </div>
+            <div className="stat-tile">
+              <span className="ic">{TrophyIcon}</span>
+              <div>
+                <div className="v">{stats.best_streak}</div>
+                <div className="l">Best Streak</div>
+              </div>
+            </div>
           </div>
+
+          <section className="panel">
+            <div className="panel-title">This Week <span className="tag">25+ PTS = MISSION</span></div>
+            <DayDots byDate={ptsByDate} />
+          </section>
+
+          <section className="panel">
+            <div className="panel-title">Last 14 Days</div>
+            <Sparkline byDate={ptsByDate} />
+          </section>
         </div>
-        <div className="stat-tile">
-          <span className="ic">{TrophyIcon}</span>
-          <div>
-            <div className="v">{stats.best_streak}</div>
-            <div className="l">Best Streak</div>
-          </div>
-        </div>
-      </div>
 
-      <section className="panel">
-        <div className="panel-title">This Week <span className="tag">25+ PTS = MISSION</span></div>
-        <DayDots byDate={ptsByDate} />
-      </section>
-
-      <section className="panel">
-        <div className="panel-title">Last 14 Days</div>
-        <Sparkline byDate={ptsByDate} />
-      </section>
-
-      <section className="panel">
-        <div className="panel-title">Entry Log</div>
-        {Object.keys(byDate).length === 0 && <div className="empty-note">Nothing logged yet. Get after it.</div>}
-        {Object.entries(byDate).map(([date, rows]) => (
-          <div key={date} className="history-day">
-            <div className="history-date">{fmtDate(date)}</div>
-            {rows.map((e, i) => (
-              <div key={i} className="history-line">
-                <span>
-                  {e.kpi_definitions.label}
-                  {e.status !== 'approved' && <span className={`status-chip ${e.status}`} style={{ marginLeft: 8 }}>{e.status}</span>}
-                </span>
-                <span className="q">{Number(e.quantity)} · {fmtPoints(Number(e.quantity) * Number(e.points_each))} PTS</span>
+        <div>
+          <section className="panel">
+            <div className="panel-title">Entry Log</div>
+            {Object.keys(byDate).length === 0 && <div className="empty-note">Nothing logged yet. Get after it.</div>}
+            {Object.entries(byDate).map(([date, rows]) => (
+              <div key={date} className="history-day">
+                <div className="history-date">{fmtDate(date)}</div>
+                {rows.map((e, i) => (
+                  <div key={i} className="history-line">
+                    <span>
+                      {e.kpi_definitions.label}
+                      {e.status !== 'approved' && <span className={`status-chip ${e.status}`} style={{ marginLeft: 8 }}>{e.status}</span>}
+                    </span>
+                    <span className="q">{Number(e.quantity)} · {fmtPoints(Number(e.quantity) * Number(e.points_each))} PTS</span>
+                  </div>
+                ))}
               </div>
             ))}
-          </div>
-        ))}
-      </section>
+          </section>
 
-      <button className="btn btn-ghost btn-block" onClick={signOut}>Sign Out</button>
+          <button className="btn btn-ghost btn-block hide-desktop" onClick={signOut}>Sign Out</button>
+        </div>
+      </div>
     </div>
   );
 }
